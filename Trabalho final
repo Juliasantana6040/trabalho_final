@@ -1,0 +1,121 @@
+import java.util.*;
+
+// Classe Doador
+class Doador {
+    private String nome;
+
+    public Doador(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+}
+
+// Classe Doacao
+class Doacao {
+    private String tipo;
+    private double quantidade;
+    private String data;
+    private Doador doador;
+
+    public Doacao(Doador doador, String tipo, double quantidade, String data) {
+        this.doador = doador;
+        this.tipo = tipo;
+        this.quantidade = quantidade;
+        this.data = data;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public double getQuantidade() {
+        return quantidade;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public String getNomeDoador() {
+        return doador.getNome();
+    }
+}
+
+// Classe SistemaDoacoes
+class SistemaDoacoes {
+    private List<Doacao> doacoes;
+
+    public SistemaDoacoes() {
+        this.doacoes = new ArrayList<>();
+    }
+
+    public void registrarDoacao(Doador doador, String tipoDoacao, double quantidade, String data) {
+        Doacao novaDoacao = new Doacao(doador, tipoDoacao, quantidade, data);
+        doacoes.add(novaDoacao);
+    }
+
+    public double calcularTotalAcumulado() {
+        double total = 0.0;
+        for (Doacao doacao : doacoes) {
+            total += doacao.getQuantidade();
+        }
+        return total;
+    }
+
+    public List<Doacao> listarDoacoesPorDoador(String nomeDoador) {
+        List<Doacao> doacoesDoDoador = new ArrayList<>();
+        for (Doacao doacao : doacoes) {
+            if (doacao.getNomeDoador().equals(nomeDoador)) {
+                doacoesDoDoador.add(doacao);
+            }
+        }
+        return doacoesDoDoador;
+    }
+}
+
+// Classe principal Main
+public class Main {
+
+    public static void main(String[] args) {
+        SistemaDoacoes sistema = new SistemaDoacoes();
+        Scanner scanner = new Scanner(System.in);
+
+        // Pedindo informações do doador
+        System.out.print("Digite o nome do doador: ");
+        String nomeDoador = scanner.nextLine();
+
+        // Pedindo informações da doação
+        System.out.print("Digite o tipo de doação (ex: Alimentos, Dinheiro, Roupas): ");
+        String tipoDoacao = scanner.nextLine();
+
+        System.out.print("Digite a quantidade doada: ");
+        double quantidade = scanner.nextDouble();
+        scanner.nextLine(); // Limpar o buffer após o nextDouble()
+
+        System.out.print("Digite a data da doação (formato DD/MM/AAAA): ");
+        String data = scanner.nextLine();
+
+        // Criando o objeto doador
+        Doador doador = new Doador(nomeDoador);
+
+        // Registrando a doação no sistema
+        sistema.registrarDoacao(doador, tipoDoacao, quantidade, data);
+
+        // Calculando o total acumulado
+        double totalAcumulado = sistema.calcularTotalAcumulado();
+        System.out.println("Total acumulado de doações: R$" + totalAcumulado);
+
+        // Listando as doações do doador específico
+        List<Doacao> doacoesDoador = sistema.listarDoacoesPorDoador(nomeDoador);
+        System.out.println("Doações de " + nomeDoador + ":");
+        for (Doacao doacao : doacoesDoador) {
+            System.out.println("Tipo: " + doacao.getTipo() + ", Quantidade: " + doacao.getQuantidade() + ", Data: " + doacao.getData());
+        }
+
+        // Fechar o scanner
+        scanner.close();
+    }
+}
